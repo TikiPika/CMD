@@ -1,0 +1,4 @@
+@echo off
+rem 映射个人文件夹
+net use Z: /delete /yes
+net use Z: "\\fileserver\share\%USERNAME%" /persistent:yes
