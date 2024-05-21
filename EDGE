@@ -1,0 +1,8 @@
+@echo off
+
+REM 设置注册表键值
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /v AllowFileAccessInFileUrls /t REG_DWORD /d 1 /f
+
+echo 注册表键值已设置。
+
+pause
