@@ -1,13 +1,15 @@
 @echo off
 
-rem 获取当前网络连接接口的 GUID
-for /f "tokens=3 delims=\" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" /s /f "IPAddress"') do (
-    for /f "tokens=2 delims=:" %%i in ('netsh interface ip show address "%%a" ^| findstr /c:"Address"') do (
-        set "ip=%%i"
-        if "!ip:~0,8!"=="172.24.2" (
-            rem 在注册表中设置 DNS 地址
-            reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\%%a" /v "NameServer" /t REG_SZ /d "8.8.8.8,8.8.4.4,1.1.1.1,1.0.0.1" /f
-            echo 已将 DNS 地址更新为 8.8.8.8, 8.8.4.4, 1.1.1.1, 1.0.0.1。
-        )
-    )
+rem 获取当前活动的网络连接名称
+for /f "tokens=1,2,3,4,5*" %%a in ('netsh interface show interface ^| findstr /i "connected"') do (
+    rem 设置DNS地址
+    netsh interface ipv4 set dns name="%%e" static 8.8.8.8
+    netsh interface ipv4 add dns name="%%e" 8.8.4.4 index=2
+    netsh interface ipv4 add dns name="%%e" 1.1.1.1 index=3
+    netsh interface ipv4 add dns name="%%e" 1.0.0.1 index=4
+    goto :done
 )
+
+:done
+echo DNS addresses have been updated to 8.8.8.8, 8.8.4.4, 1.1.1.1, 1.0.0.1
+pause
