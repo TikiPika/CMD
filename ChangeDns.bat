@@ -8,12 +8,9 @@ set dns3=1.1.1.1
 set dns4=1.0.0.1
 
 rem 获取当前的连接名称
-for /f "tokens=*" %%a in ('netsh interface ipv4 show interfaces ^| findstr /R /C:"[0-9]"') do (
+for /f "tokens=2 delims=: " %%a in ('wmic nicconfig where "IPEnabled='TRUE'" get Description /value ^| find "="') do (
     set connectionName=%%a
-    goto :continue
 )
-
-:continue
 
 rem 设置 DNS 地址
 netsh interface ipv4 set dns name="!connectionName!" source=static addr=%dns1%
