@@ -34,3 +34,17 @@ for /f "tokens=* delims=" %%b in ("%connectionName%") do (
 )
 
 echo 当前网络连接名称为: %connectionName%
+
+@echo off
+
+rem 获取当前网络连接名称
+for /f "tokens=* delims=" %%a in ('netsh interface show interface') do (
+    set "connectionName=%%a"
+)
+
+rem 提取最后一列非空数据
+for /f "tokens=* delims=" %%b in ("%connectionName%") do (
+    set "connectionName=%%b"
+)
+
+echo 当前网络连接名称为: %connectionName%
