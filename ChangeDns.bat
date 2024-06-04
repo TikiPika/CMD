@@ -7,13 +7,13 @@ set dns2=8.8.4.4
 set dns3=1.1.1.1
 set dns4=1.0.0.1
 
-rem 获取当前的连接名称
-for /f "tokens=2 delims=: " %%a in ('wmic nicconfig where "IPEnabled='TRUE'" get Description /value ^| find "="') do (
+rem 获取当前激活的网络连接名称
+for /f "tokens=3 delims=: " %%a in ('netsh interface show interface ^| findstr "已连接"') do (
     set connectionName=%%a
 )
 
 rem 设置 DNS 地址
-netsh interface ipv4 set dns name="!connectionName!" source=static addr=%dns1%
+netsh interface ipv4 set dns name="!connectionName!" static %dns1%
 netsh interface ipv4 add dns name="!connectionName!" addr=%dns2% index=2
 netsh interface ipv4 add dns name="!connectionName!" addr=%dns3% index=3
 netsh interface ipv4 add dns name="!connectionName!" addr=%dns4% index=4
