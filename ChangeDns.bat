@@ -8,7 +8,7 @@ set tertiaryDNS=1.1.1.1
 set quaternaryDNS=1.0.0.1
 
 REM 获取所有启用的网络适配器名称
-for /f "tokens=*" %%A in ('wmic nic where "NetEnabled=true" get NetConnectionID ^| findstr /v "NetConnectionID"') do (
+for /f "tokens=*" %%A in ('wmic nic where "NetEnabled=true" get NetConnectionID ^| findstr /r /v "^$" ^| findstr /v "NetConnectionID"') do (
     REM 设置DNS服务器地址
     netsh interface ipv4 set dns name="%%A" static %primaryDNS%
     netsh interface ipv4 add dns name="%%A" addr=%secondaryDNS% index=2
